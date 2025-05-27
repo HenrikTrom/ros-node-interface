@@ -7,16 +7,15 @@ date-released: 2025-05-27
 license: CC0-1.0 
 url: https://github.com/HenrikTrom/ros-node-interface
 repository-code: https://github.com/HenrikTrom/ros-node-interface
-abstract: "A lightweight C++ interface template for managing ROS nodes with start/stop/shutdown control via ROS services."
+abstract: "A lightweight C++ and python interface template for managing ROS nodes with start/stop/shutdown control via ROS services."
 authors:
   - family-names: Trommer
     given-names: Henrik
     orcid: https://orcid.org/0009-0002-3110-0963
     affiliation: University of Göttingen
 keywords:
-  - multithreading
-  - json handling
-  - video-loading
-  - cli tools
-  - open source
-  - research software
+  - ros
+  - ros2
+  - node-interface
+  - cpp
+  - python

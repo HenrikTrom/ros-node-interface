@@ -1,8 +1,8 @@
 # ros-node-interface
 
-[![DOI](https://zenodo.org/badge/991307682.svg)](https://zenodo.org/badge/latestdoi/991307682)
+[![DOI](https://zenodo.org/badge/991372107.svg)](https://zenodo.org/badge/latestdoi/991372107)
 
-A lightweight C++ interface template for managing ROS nodes with start/stop/shutdown control via ROS services.
+A lightweight C++ and python interface template for managing ROS nodes with start/stop/shutdown control via ROS services.
 
 This module provides a generic wrapper (`BaseRosInterface`) around any ROS-compatible module class, enabling it to be:
 - Started and stopped using ROS service calls
