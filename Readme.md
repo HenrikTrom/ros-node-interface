@@ -4,6 +4,10 @@
 
 A lightweight C++ and python interface template for managing ROS nodes with start/stop/shutdown control via ROS services.
 
+## 📑 Citation
+
+If you use this software, please use the GitHub **“Cite this repository”** button at the top(-right) of this page.
+
 This module provides a generic wrapper (`BaseRosInterface`) around any ROS-compatible module class, enabling it to be:
 - Started and stopped using ROS service calls
 - Managed with a clean threaded loop
