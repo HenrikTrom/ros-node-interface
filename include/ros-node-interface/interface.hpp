@@ -13,7 +13,8 @@
 
 namespace ros_node_interface {
 
-class TestModule{
+class TestModule
+{
 public:
     TestModule(){};
     TestModule(ros::NodeHandle &nh, const std::string &topic_name)
@@ -24,15 +25,6 @@ public:
     // implement functions
     bool start(){return true;};
     bool stop(){return true;};
-    void loop_step()
-    {
-        i++;
-        // std::cout << i << std::endl;
-        std_msgs::String msg;
-        msg.data = std::to_string(i);
-        pub.publish(msg);
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    };
     std::string get_type()
     {
         return this->type;
@@ -50,7 +42,6 @@ public:
     BaseRosInterfaceModule(){};
     ~BaseRosInterfaceModule(){};
     virtual bool start() = 0;
-    virtual bool loop_step() = 0;
     virtual void Terminate() = 0;
 
     std::string get_type()
@@ -60,11 +51,12 @@ public:
     ros::NodeHandle nh;
     std::string type = "TypeNotImplemented";
     ros::Publisher pub;
-
+    bool ShouldClose = false;
 };
 
 template <class InterfaceModule>
-class BaseRosInterface{
+class BaseRosInterface
+{
 public:
     /**
      * Generates a BaseRosInterface
@@ -91,41 +83,33 @@ public:
     };
 
     /**
-     * Main loop
-     */
-    void threadFunction(){
-        while (this->should_run && ros::ok()) {
-            this->interface_module->loop_step();
-        }
-        ROS_INFO_STREAM("Stopping BaseRosInterface " << this->interface_module->get_type());
-    };
-
-    /**
-     * Initializes and starts the main-publishing loop of the interface
+     * Initializes and starts the main interface
      *
      * @param [in]  req service request
      * @param [out] res service response
      * @return true if interface could get started, false otherwise
      */
     bool start_cb(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res){
-        if (this->should_run){
+        if (this->should_run)
+        {
             res.message="Process is already running";
             res.success = false;
             return true;
         }
-        else{
+        else
+        {
             ROS_INFO_STREAM("Starting BaseRosInterface " + this->interface_module->get_type());
             res.message="Starting";
             res.success = true;
             this->should_run = true;
+            this->interface_module->ShouldClose = false;
             this->interface_module->start();
-            this->mainThread = std::thread(&BaseRosInterface::threadFunction, this);
             return true;
         }
     };
 
     /**
-     * Stops the main-publishing loop
+     * Stops the interface
      *
      * @param [in]  req service request
      * @param [out] res service response
@@ -137,8 +121,9 @@ public:
             res.message="Stopping";
             res.success = true;
             this->should_run = false;
-            this->mainThread.join();
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            ROS_INFO_STREAM("Stopping RosInterface " << this->interface_module->get_type());
+            this->interface_module->ShouldClose = true;
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
             this->interface_module->Terminate();
             return true;
         }
